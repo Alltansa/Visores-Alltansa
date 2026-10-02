@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SKY-H25KV015 R2 — Visor 3D</title>
+<script type="module" src="https://cdnjs.cloudflare.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+<style>
+  :root {
+    --bg: #14181c; --panel: #1c2126; --border: #2c333a;
+    --text: #e8ebee; --muted: #97a1ab; --accent: #d98e3c;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 24px;
+    background: var(--bg); color: var(--text);
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .header-row {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 14px; margin-bottom: 4px;
+  }
+  .logo-plate {
+    background: #fff; border-radius: 8px; padding: 6px 10px;
+    display: inline-flex; align-items: center; flex-shrink: 0;
+  }
+  .logo-plate img { height: 34px; display: block; }
+  h1 { font-size: 19px; font-weight: 600; margin: 0 0 2px 0; letter-spacing: 0.2px; }
+  .subtitle { color: var(--muted); font-size: 13px; margin-bottom: 20px; }
+  model-viewer {
+    width: 100%; height: 980px;
+    background: linear-gradient(180deg, #20262c 0%, #14181c 100%);
+    border-radius: 10px; border: 1px solid var(--border);
+    --poster-color: transparent;
+    touch-action: none;
+  }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 22px; }
+  @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+
+  @media (max-width: 560px) {
+    body { padding: 12px; }
+    .logo-plate img { height: 26px; }
+    h1 { font-size: 16px; }
+    .subtitle { font-size: 11.5px; margin-bottom: 14px; }
+    model-viewer { height: 580px; border-radius: 8px; }
+    .grid { gap: 12px; margin-top: 16px; }
+    .panel { padding: 12px 12px; border-radius: 8px; }
+    .panel h2 { font-size: 12px; margin-bottom: 8px; }
+    table { font-size: 11.5px; }
+    th, td { padding: 5px 4px; }
+    th { font-size: 10px; }
+    .note { font-size: 10.5px; margin-top: 8px; }
+    .panel-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  }
+  .panel {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px 18px;
+  }
+  .panel h2 {
+    font-size: 13px; text-transform: uppercase; letter-spacing: 0.6px;
+    color: var(--accent); margin: 0 0 12px 0; font-weight: 600;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--border); }
+  th { color: var(--muted); font-weight: 500; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.3px; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  tr:last-child td { border-bottom: none; }
+  .tag { display:inline-block; padding: 1px 7px; border-radius: 4px; font-size: 11px; }
+  .tag-axial { background: #3a2f1a; color: #e0aa5a; }
+  .tag-radial { background: #1a2f3a; color: #5aaee0; }
+  .note { color: var(--muted); font-size: 11.5px; margin-top: 10px; line-height: 1.5; }
+  .palette {
+    display: flex; justify-content: center; gap: 14px;
+    margin-top: 14px; flex-wrap: wrap;
+  }
+  .palette > div { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+  .swatch {
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 2px solid #3a3d44; cursor: pointer; padding: 0;
+  }
+  .swatch.active { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(217,142,60,0.35); }
+  .swatch-label { font-size: 10px; color: var(--muted); }
+  @media (max-width: 560px) {
+    .swatch { width: 24px; height: 24px; }
+    .palette { gap: 10px; margin-top: 10px; }
+  }
+  .toggle-row {
+    display: flex; justify-content: center; align-items: center; gap: 8px;
+    margin-top: 14px; font-size: 12px; color: var(--muted); flex-wrap: wrap;
+  }
+  .toggle-row button {
+    background: var(--panel); color: var(--text); border: 1px solid var(--border);
+    border-radius: 8px; padding: 6px 12px; font-size: 12px; cursor: pointer;
+  }
+  .toggle-row button.active { border-color: var(--accent); color: var(--accent); }
+  .hotspot {
+    display: flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; border-radius: 50%; padding: 0; cursor: pointer;
+    background: var(--accent); color: #14181c; border: 1.5px solid rgba(255,255,255,0.8);
+    font: 700 11px/1 system-ui, sans-serif; opacity: 0.8;
+    box-shadow: 0 0 4px rgba(0,0,0,.5); transition: opacity 0.15s ease;
+  }
+  .hotspot:hover, .hotspot:focus { opacity: 1; }
+  .hotspot .hotspot-label {
+    display: none; position: absolute; left: 18px; top: -8px; white-space: nowrap;
+    background: var(--panel); border: 1px solid var(--border); color: var(--text);
+    font-size: 11px; padding: 4px 8px; border-radius: 5px; pointer-events: none;
+  }
+  .hotspot:hover .hotspot-label, .hotspot:focus .hotspot-label { display: block; }
+  .audio-row {
+    display: flex; align-items: center; gap: 8px; margin: 14px 0 0 0; flex-wrap: wrap;
+  }
+  .audio-row button {
+    background: var(--panel); color: var(--text); border: 1px solid var(--border);
+    border-radius: 8px; padding: 8px 14px; font-size: 13px; cursor: pointer;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .audio-row select {
+    background: var(--panel); color: var(--text); border: 1px solid var(--border);
+    border-radius: 8px; padding: 6px 10px; font-size: 12px;
+  }
+  #ar-button {
+    position: absolute; bottom: 14px; right: 14px; z-index: 5;
+    background: var(--accent); color: #14181c; border: 0; border-radius: 8px;
+    padding: 10px 16px; font-size: 13px; font-weight: 600; cursor: pointer;
+  }
+  model-viewer.sin-marcadores .hotspot { display: none; }
+  .cota-pt { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; border: 0; padding: 0; }
+  #vwrap { position: relative; }
+  #cotas { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+</style>
+</head>
+<body>
+
+<div class="header-row">
+  <div>
+    <h1>SKY-H25KV015 R2 — Tanque para aceite</h1>
+    <div class="subtitle">25,000 L nominal · atmosférico (-0.5 a +1.0 psi) @ 60°C · Acero al carbón</div>
+  </div>
+  <div class="logo-plate"><img src="data:image/png;base64,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" alt="Alltansa"></div>
+</div>
+
+<div id="vwrap">
+<model-viewer
+  id="viewer"
+  src="SKY-H25KV015_R2.glb"
+  camera-controls
+  ar
+  ar-modes="webxr scene-viewer quick-look"
+  ar-scale="fixed"
+  ar-placement="floor"
+  auto-rotate
+  rotation-per-second="18deg"
+  shadow-intensity="1.1"
+  shadow-softness="0.4"
+  exposure="0.85"
+  environment-image="neutral"
+  camera-orbit="35deg 75deg 140%"
+  interaction-prompt="none"
+  touch-action="none">
+
+  <!-- Hotspots reales -- posiciones sacadas del GLB (centroide de cada pieza / 1000 -> metros) -->
+  <button slot="hotspot-n1" class="hotspot" data-position="0 2.6543 -0.7112" data-normal="0 1 0"><span class="hnum">9</span><span class="hotspot-label">9 — Entrada de hombre D20" (cuello 6, brida 7, empaque 8, tapa 9)</span>
+  </button>
+  <button slot="hotspot-n2" class="hotspot" data-position="-0.59 2.6952 -0.7112" data-normal="0 1 0"><span class="hnum">25</span><span class="hotspot-label">25 — Medio cople 3" NPT, en tapa de entrada de hombre</span>
+  </button>
+  <button slot="hotspot-n3" class="hotspot" data-position="0.0763 2.8726 0" data-normal="0 1 0"><span class="hnum">27</span><span class="hotspot-label">27 — Línea de venteo (tubo 2" 26 + 2 codos soldables 27)</span>
+  </button>
+  <button slot="hotspot-n4" class="hotspot" data-position="0 2.7075 0.9144" data-normal="0 1 0"><span class="hnum">23</span><span class="hotspot-label">23 — Brida 4" (23) + tubo corto 6" (22)</span>
+  </button>
+  <button slot="hotspot-n5" class="hotspot" data-position="0 -2.8321 1.2089" data-normal="0 0 1"><span class="hnum">21</span><span class="hotspot-label">21 — Brida 4" (23) + tubo largo 42" (21) + codo 90° (20), con abrazadera U</span>
+  </button>
+  <button slot="hotspot-n6" class="hotspot" data-position="-0.571 0.001 1.2245" data-normal="-0.4 0 0.9"><span class="hnum">31</span><span class="hotspot-label">31 — Mirilla de nivel transparente, tubo PVC toda la altura</span>
+  </button>
+  <button slot="hotspot-n7" class="hotspot" data-position="0 2.5652 -1.2484" data-normal="0 0 -1"><span class="hnum">18</span><span class="hotspot-label">18 — Escalera marinera con jaula y descanso</span>
+  </button>
+  <button slot="hotspot-n8" class="hotspot" data-position="-0.9363 -1.9731 0.9363" data-normal="-0.7 0 0.7"><span class="hnum">19</span><span class="hotspot-label">19 — Torre de 4 vigas IPR (estructura de soporte)</span>
+  </button>
+  <button slot="hotspot-n9" class="hotspot" data-position="-1.3018 -2.2098 0" data-normal="-1 0 0"><span class="hnum">15</span><span class="hotspot-label">15 — Oreja de izaje 6x4</span>
+  </button>
+  <button slot="hotspot-n10" class="hotspot" data-position="-1.3018 2.2098 0" data-normal="-1 0 0"><span class="hnum">15</span><span class="hotspot-label">15 — Oreja de izaje 6x4</span>
+  </button>
+  <button slot="hotspot-n11" class="hotspot" data-position="1.0437 2.6353 0" data-normal="1 0 0"><span class="hnum">15</span><span class="hotspot-label">15 — Oreja de izaje 6x4</span>
+  </button>
+  <button slot="hotspot-n12" class="hotspot" data-position="-1.0437 2.6353 0" data-normal="-1 0 0"><span class="hnum">15</span><span class="hotspot-label">15 — Oreja de izaje 6x4</span>
+  </button>
+  <button slot="hotspot-c0" class="cota-pt" data-position="0 0 0" data-normal="0 1 0"></button>
+  <button slot="hotspot-cx" class="cota-pt" data-position="0.5 0 0" data-normal="0 1 0"></button>
+  <button slot="hotspot-cz" class="cota-pt" data-position="0 0 0.5" data-normal="0 1 0"></button>
+  <button slot="hotspot-ca1" class="cota-pt" data-position="1.65 -2.997 0" data-normal="0 1 0"></button>
+  <button slot="hotspot-ca2" class="cota-pt" data-position="1.65 3.5621 0" data-normal="0 1 0"></button>
+  <button slot="hotspot-cb1" class="cota-pt" data-position="-1.2466 -3.15 0" data-normal="0 1 0"></button>
+  <button slot="hotspot-cb2" class="cota-pt" data-position="1.2466 -3.15 0" data-normal="0 1 0"></button>
+  <button slot="hotspot-cc1" class="cota-pt" data-position="-1.65 -2.4384 0" data-normal="0 1 0"></button>
+  <button slot="hotspot-cc2" class="cota-pt" data-position="-1.65 2.4384 0" data-normal="0 1 0"></button>
+  <button slot="ar-button" id="ar-button">&#9654; Ver en tu espacio (AR)</button>
+</model-viewer>
+<svg id="cotas" xmlns="http://www.w3.org/2000/svg"></svg>
+</div>
+
+<!-- Narración de audio del tanque — 100% en el navegador, sin archivos externos -->
+<div class="audio-row">
+  <button id="btn-narracion">
+    <span id="btn-narracion-icono">&#9658;</span> Escuchar descripción
+  </button>
+  <select id="select-voz">
+    <option value="">(cargando voces...)</option>
+  </select>
+</div>
+<script>
+(function(){
+  const TEXTO_NARRACION =
+    "Este es el modelo S, ka, i, guión, hache, 25, ka, uve, cero 15, " +
+    "revisión 2, de Alltansa, un tanque para aceite con capacidad de " +
+    "25,000 litros, de diseño atmosférico, entre menos 0.5 y más 1 PSI. " +
+    "Sus dimensiones son: diámetro exterior de 98 pulgadas, longitud de " +
+    "cuerpo de 192 pulgadas en dos cursos de 96, y altura total de " +
+    "655.92 centímetros, con tapas toriesféricas, sobre 4 placas base " +
+    "y 4 tensores de arriostramiento tipo ce. Incluye una entrada de " +
+    "hombre de 20 pulgadas; una línea de venteo; bridas de 4 pulgadas " +
+    "para llenado y para salida; un indicador de nivel tipo mirilla con " +
+    "tubo transparente de PVC que corre toda la altura; una escalera " +
+    "marinera con jaula y descanso; una torre de 4 vigas I, pe, erre " +
+    "como estructura de soporte; y cuatro orejas de izaje.";
+
+  const btn = document.getElementById('btn-narracion');
+  const icono = document.getElementById('btn-narracion-icono');
+  const selectVoz = document.getElementById('select-voz');
+  let hablando = false;
+  let vocesEspanol = [];
+
+  function poblarVoces(){
+    const todas = speechSynthesis.getVoices();
+    vocesEspanol = todas.filter(v => v.lang && v.lang.toLowerCase().startsWith('es'));
+    if (vocesEspanol.length === 0){
+      selectVoz.innerHTML = '<option value="">(sin voces en español instaladas)</option>';
+      return;
+    }
+    selectVoz.innerHTML = vocesEspanol
+      .map((v, i) => `<option value="${i}">${v.name} (${v.lang})</option>`)
+      .join('');
+  }
+  poblarVoces();
+  if (speechSynthesis.onvoiceschanged !== undefined){
+    speechSynthesis.onvoiceschanged = poblarVoces;
+  }
+
+  function vozElegida(){
+    const idx = selectVoz.value;
+    if (idx === '' || !vocesEspanol[idx]) return null;
+    return vocesEspanol[idx];
+  }
+
+  function hablar(){
+    if (hablando){
+      speechSynthesis.cancel();
+      hablando = false;
+      icono.innerHTML = '&#9658;';
+      return;
+    }
+    const utterance = new SpeechSynthesisUtterance(TEXTO_NARRACION);
+    const voz = vozElegida();
+    if (voz) utterance.voice = voz;
+    utterance.lang = voz ? voz.lang : 'es-MX';
+    utterance.rate = 1.0;
+    utterance.onend = () => { hablando = false; icono.innerHTML = '&#9658;'; };
+    utterance.onerror = () => { hablando = false; icono.innerHTML = '&#9658;'; };
+    speechSynthesis.speak(utterance);
+    hablando = true;
+    icono.innerHTML = '&#10074;&#10074;';
+  }
+
+  btn.addEventListener('click', hablar);
+})();
+</script>
+
+<div class="palette" id="palette">
+  <div>
+    <button class="swatch active" style="background:rgb(223,255,255); border-color:#8a8f96" data-color="0.875,1.0,1.0,1" title="Original"></button>
+    <div class="swatch-label">Original</div>
+  </div>
+  <div>
+    <button class="swatch" style="background:#0000FF" data-color="0.0,0.0,1.0,1" title="Azul"></button>
+    <div class="swatch-label">Azul</div>
+  </div>
+  <div>
+    <button class="swatch" style="background:#FFDE21" data-color="1.0,0.871,0.129,1" title="Amarillo"></button>
+    <div class="swatch-label">Amarillo</div>
+  </div>
+  <div>
+    <button class="swatch" style="background:#8C8F94" data-color="0.42,0.43,0.45,1" title="Gris"></button>
+    <div class="swatch-label">Gris</div>
+  </div>
+  <div>
+    <button class="swatch" style="background:#26282C" data-color="0.08,0.085,0.09,1" title="Negro"></button>
+    <div class="swatch-label">Negro</div>
+  </div>
+  <div>
+    <input type="color" id="color-personalizado" value="#DFFFFF" style="
+      width:28px; height:28px; border-radius:50%; border:2px solid #3a3d44;
+      padding:0; cursor:pointer; background:none;">
+    <div class="swatch-label">Personalizado</div>
+  </div>
+</div>
+
+<div class="toggle-row">
+  Acabado:
+  <button id="btn-metalico" class="active">Metálico</button>
+  <button id="btn-mate">Mate</button>
+</div>
+<div class="toggle-row">
+  Contornos:
+  <button id="btn-contornos-on" class="active">Activar</button>
+  <button id="btn-contornos-off">Desactivar</button>
+</div>
+<div class="toggle-row">
+  Marcadores:
+  <button id="btn-marc-on" class="active">Mostrar</button>
+  <button id="btn-marc-off">Ocultar</button>
+</div>
+<div class="toggle-row">
+  Cotas:
+  <button id="btn-cotas-on">Mostrar</button>
+  <button id="btn-cotas-off" class="active">Ocultar</button>
+</div>
+
+<div class="grid">
+  <div class="panel">
+    <h2>Dimensiones generales</h2>
+    <table>
+      <tr><th>Dato</th><th class="num">Valor</th></tr>
+      <tr><td>Capacidad nominal</td><td class="num">25,000 L</td></tr>
+      <tr><td>Presión de diseño</td><td class="num">Atm. (-0.5 a +1.0 psi)</td></tr>
+      <tr><td>P. de prueba neumática</td><td class="num">4 psi</td></tr>
+      <tr><td>P. de prueba hidrostática</td><td class="num">N/A</td></tr>
+      <tr><td>Temperatura de diseño</td><td class="num">60°C</td></tr>
+      <tr><td>Corrosión permitida</td><td class="num">0.0"</td></tr>
+      <tr><td>Material cuerpo / tapas</td><td class="num">Acero al carbón</td></tr>
+      <tr><td>Tipo de tapas</td><td class="num">Toriesférica</td></tr>
+      <tr><td>Diámetro exterior (Do)</td><td class="num">98"</td></tr>
+      <tr><td>Longitud de cuerpo</td><td class="num">192" (2 cursos de 96")</td></tr>
+      <tr><td>Altura total</td><td class="num">655.92 cm</td></tr>
+      <tr><td>Base / soporte</td><td class="num">4 placa base 14"x14", 4 tensores "C" de arriostramiento</td></tr>
+      <tr><td>Pintura exterior</td><td class="num">Poliuretano</td></tr>
+      <tr><td>Radiografiado</td><td class="num">No requerido</td></tr>
+      <tr><td>Peso teórico</td><td class="num">2,491 kg</td></tr>
+    </table>
+  </div>
+  <div class="panel">
+    <h2>Boquillas y accesorios</h2>
+    <div class="panel-scroll">
+    <table>
+      <tr><th>No.</th><th>Conexión / accesorio</th><th>Cant.</th><th>Posición</th></tr>
+      <tr><td class="num">6–9</td><td>Entrada de hombre D20" (cuello+brida+empaque+tapa)</td><td class="num">1</td><td><span class="tag tag-axial">Superior</span></td></tr>
+      <tr><td class="num">25</td><td>Medio cople 3" NPT</td><td class="num">1</td><td><span class="tag tag-axial">Superior, en tapa de entrada</span></td></tr>
+      <tr><td class="num">26, 27</td><td>Línea de venteo (tubo 2" + 2 codos)</td><td class="num">1</td><td><span class="tag tag-axial">Superior</span></td></tr>
+      <tr><td class="num">22, 23</td><td>Brida 4" + tubo corto 6"</td><td class="num">1</td><td><span class="tag tag-axial">Superior</span></td></tr>
+      <tr><td class="num">20, 21, 23</td><td>Brida 4" + tubo largo 42" + codo 90° + abrazadera U</td><td class="num">1</td><td><span class="tag tag-radial">Inferior</span></td></tr>
+      <tr><td class="num">31</td><td>Mirilla de nivel transparente (tubo PVC)</td><td class="num">1</td><td><span class="tag tag-radial">Lateral, toda la altura</span></td></tr>
+      <tr><td class="num">14, 18</td><td>Escalera marinera con jaula y descanso</td><td class="num">1</td><td><span class="tag tag-axial">Lateral, toda la altura</span></td></tr>
+      <tr><td class="num">19, 17</td><td>Torre de 4 vigas IPR 6x6 22.3 kg/m</td><td class="num">4</td><td>Perimetral</td></tr>
+      <tr><td class="num">15</td><td>Oreja de izaje 6x4</td><td class="num">4</td><td>Lateral, distintas alturas</td></tr>
+      <tr><td class="num">16</td><td>Placa de datos</td><td class="num">1</td><td>Cuerpo</td></tr>
+    </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  const viewer = document.getElementById('viewer');
+  const buttons = document.querySelectorAll('.swatch');
+  const btnMetalico = document.getElementById('btn-metalico');
+  const btnMate = document.getElementById('btn-mate');
+  const btnContornosOn = document.getElementById('btn-contornos-on');
+  const btnContornosOff = document.getElementById('btn-contornos-off');
+
+  // Color original de cada material, capturado al cargar: el GLB trae varios
+  // materiales con el mismo nombre ('defaultplastic'), no se pueden filtrar por nombre.
+  let ORIG = [];
+  const COLOR_CUERPO = document.querySelector('.swatch[title="Original"]').dataset.color.split(',').map(Number);
+  function esFijo(m, i){
+    if (!ORIG.length && viewer.model) ORIG = viewer.model.materials.map(x => x.pbrMetallicRoughness.baseColorFactor.slice());
+    const o = ORIG[i];
+    return m.name === 'texture' || m.name === 'edge_lines_black' || m.name === 'mattesteel'
+        || !o || o[3] < 1;   // alfa < 1 = tubo PVC transparente de la mirilla
+  }
+  function esCuerpo(m, i){
+    if (esFijo(m, i)) return false;
+    const o = ORIG[i];
+    return [0,1,2].every(k => Math.abs(o[k] - COLOR_CUERPO[k]) < 0.01);
+  }
+
+  function aplicarAcabado(metalico){
+    if (!viewer.model) return;
+    viewer.model.materials.forEach((m, i) => {
+      if (esFijo(m, i)) return;
+      m.pbrMetallicRoughness.setMetallicFactor(metalico ? 0.65 : 0.0);
+      m.pbrMetallicRoughness.setRoughnessFactor(metalico ? 0.35 : 0.9);
+    });
+  }
+
+  function aplicarContornos(visible){
+    if (!viewer.model) return;
+    const mat = viewer.model.materials.find(m => m.name === 'edge_lines_black');
+    if (!mat) return;
+    // el material viene OPAQUE: con OPAQUE el alfa se ignora, hay que cambiar el modo
+    mat.setAlphaMode(visible ? 'OPAQUE' : 'BLEND');
+    mat.pbrMetallicRoughness.setBaseColorFactor([0.02, 0.02, 0.02, visible ? 1 : 0]);
+  }
+
+  viewer.addEventListener('load', () => {
+    ORIG = viewer.model.materials.map(m => m.pbrMetallicRoughness.baseColorFactor.slice());
+    aplicarAcabado(true); aplicarContornos(true);
+  });
+
+  btnMetalico.addEventListener('click', () => {
+    aplicarAcabado(true);
+    btnMetalico.classList.add('active');
+    btnMate.classList.remove('active');
+  });
+  btnMate.addEventListener('click', () => {
+    aplicarAcabado(false);
+    btnMate.classList.add('active');
+    btnMetalico.classList.remove('active');
+  });
+
+  btnContornosOn.addEventListener('click', () => {
+    aplicarContornos(true);
+    btnContornosOn.classList.add('active');
+    btnContornosOff.classList.remove('active');
+  });
+  btnContornosOff.addEventListener('click', () => {
+    aplicarContornos(false);
+    btnContornosOff.classList.add('active');
+    btnContornosOn.classList.remove('active');
+  });
+
+  const bMarcOn = document.getElementById('btn-marc-on');
+  const bMarcOff = document.getElementById('btn-marc-off');
+  function marcadores(visible){
+    viewer.classList.toggle('sin-marcadores', !visible);
+    bMarcOn.classList.toggle('active', visible);
+    bMarcOff.classList.toggle('active', !visible);
+  }
+  bMarcOn.addEventListener('click', () => marcadores(true));
+  bMarcOff.addEventListener('click', () => marcadores(false));
+
+  const svgCotas = document.getElementById('cotas');
+  const bCotasOn = document.getElementById('btn-cotas-on');
+  const bCotasOff = document.getElementById('btn-cotas-off');
+  const COTAS = [
+    { a: 'ca1', b: 'ca2', txt: '655.92 cm' },
+    { a: 'cb1', b: 'cb2', txt: 'Ø 98" (248.9 cm)' },
+    { a: 'cc1', b: 'cc2', txt: '192" (487.7 cm)' }
+  ];
+  let cotasOn = false, cotasRaf = 0, thetaPrev = null;
+  const R_TANQUE = 1.2466, Y_MIN = -2.997, Y_MAX = 3.5621, Y_CUERPO = 2.4384;
+  // las cotas siguen los bordes visibles: el vector 'derecha' de la camara cambia con el giro
+  function ubicarCotas(){
+    // vector 'derecha' de la camara en el mundo, a partir de como se proyectan 3 puntos de referencia
+    const q0 = viewer.queryHotspot('hotspot-c0'), qx = viewer.queryHotspot('hotspot-cx'), qz = viewer.queryHotspot('hotspot-cz');
+    if (!q0 || !qx || !qz) return;
+    let a = (qx.canvasPosition.x - q0.canvasPosition.x) / 0.5, b = (qz.canvasPosition.x - q0.canvasPosition.x) / 0.5;
+    const n = Math.hypot(a, b); if (n < 1e-6) return;
+    const rx = a / n, rz = b / n, th = Math.atan2(rz, rx);
+    if (thetaPrev !== null && Math.abs(th - thetaPrev) < 0.002) return;
+    thetaPrev = th;
+    const f = R_TANQUE + 0.45;
+    const P = (k, x, y, z) => viewer.updateHotspot({ name: 'hotspot-' + k, position: x.toFixed(4) + ' ' + y.toFixed(4) + ' ' + z.toFixed(4) });
+    P('ca1', rx * f, Y_MIN, rz * f);   P('ca2', rx * f, Y_MAX, rz * f);
+    P('cc1', -rx * f, -Y_CUERPO, -rz * f); P('cc2', -rx * f, Y_CUERPO, -rz * f);
+    P('cb1', -rx * R_TANQUE, -3.15, -rz * R_TANQUE); P('cb2', rx * R_TANQUE, -3.15, rz * R_TANQUE);
+  }
+  function dibujarCotas(){
+    if (!cotasOn) return;
+    if (viewer.model) ubicarCotas();
+    let h = '';
+    if (viewer.model) COTAS.forEach(c => {
+      const A = viewer.queryHotspot('hotspot-' + c.a), B = viewer.queryHotspot('hotspot-' + c.b);
+      if (!A || !B) return;
+      const x1 = A.canvasPosition.x, y1 = A.canvasPosition.y, x2 = B.canvasPosition.x, y2 = B.canvasPosition.y;
+      const dx = x2 - x1, dy = y2 - y1, L = Math.hypot(dx, dy) || 1, nx = -dy / L * 7, ny = dx / L * 7;
+      const mx = (x1 + x2) / 2, my = (y1 + y2) / 2, w = c.txt.length * 6.4 + 14;
+      h += '<g stroke="#d98e3c" stroke-width="1.6" fill="none">' +
+           '<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '"/>' +
+           '<line x1="' + (x1 - nx) + '" y1="' + (y1 - ny) + '" x2="' + (x1 + nx) + '" y2="' + (y1 + ny) + '"/>' +
+           '<line x1="' + (x2 - nx) + '" y1="' + (y2 - ny) + '" x2="' + (x2 + nx) + '" y2="' + (y2 + ny) + '"/></g>' +
+           '<rect x="' + (mx - w / 2) + '" y="' + (my - 10) + '" width="' + w + '" height="20" rx="10" fill="#14181c" stroke="#d98e3c"/>' +
+           '<text x="' + mx + '" y="' + (my + 4) + '" text-anchor="middle" font-size="11" font-weight="600" fill="#e8ebee" font-family="system-ui,sans-serif">' + c.txt + '</text>';
+    });
+    svgCotas.innerHTML = h;
+    cotasRaf = requestAnimationFrame(dibujarCotas);
+  }
+  function cotas(visible){
+    cotasOn = visible;
+    bCotasOn.classList.toggle('active', visible);
+    bCotasOff.classList.toggle('active', !visible);
+    cancelAnimationFrame(cotasRaf); thetaPrev = null;
+    if (visible) dibujarCotas(); else svgCotas.innerHTML = '';
+  }
+  bCotasOn.addEventListener('click', () => cotas(true));
+  bCotasOff.addEventListener('click', () => cotas(false));
+
+  function applyColor(rgba) {
+    const parts = rgba.split(',').map(Number);
+    if (!viewer.model) return;
+    viewer.model.materials.forEach((m, i) => {
+      if (!esCuerpo(m, i)) return;
+      m.pbrMetallicRoughness.setBaseColorFactor(parts);
+    });
+  }
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      buttons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applyColor(btn.dataset.color);
+    });
+  });
+
+  const colorPersonalizado = document.getElementById('color-personalizado');
+  colorPersonalizado.addEventListener('input', () => {
+    const hex = colorPersonalizado.value;
+    const r = parseInt(hex.slice(1,3), 16) / 255;
+    const g = parseInt(hex.slice(3,5), 16) / 255;
+    const b = parseInt(hex.slice(5,7), 16) / 255;
+    buttons.forEach(b2 => b2.classList.remove('active'));
+    applyColor(`${r.toFixed(3)},${g.toFixed(3)},${b.toFixed(3)},1`);
+  });
+</script>
+
+</body>
+</html>

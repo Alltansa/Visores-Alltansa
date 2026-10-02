@@ -1,0 +1,7 @@
+Estructura para GitHub Pages
+  index.html                           lista de visores
+  .nojekyll                            evita que GitHub procese los archivos
+  SKY-H25KV015/index.html              visor (con AR, marcadores numerados y cotas)
+  SKY-H25KV015/SKY-H25KV015_R2.glb     modelo 3D (3.1 MB)
+
+Para agregar otro tanque: crear otra carpeta con su index.html y su .glb, y una linea mas en el index.html de la raiz.
