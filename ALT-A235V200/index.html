@@ -334,6 +334,7 @@
       <tr><td>P. de prueba neumática</td><td class="num">220 psi</td></tr>
       <tr><td>P. de prueba hidrostática</td><td class="num">260 psi</td></tr>
       <tr><td>Temperatura de diseño</td><td class="num">60°C</td></tr>
+      <tr><td>Temperatura de diseño</td><td class="num">60°C</td></tr>
       <tr><td>Corrosión permitida</td><td class="num">0.0"</td></tr>
       <tr><td>Material cuerpo / tapas</td><td class="num">Acero al carbón</td></tr>
       <tr><td>Espesor cuerpo / tapas</td><td class="num">Cal. 9</td></tr>
@@ -537,7 +538,7 @@
 </nav>
 <script>
   (function(){
-    const TANQUES = [{"slug": "ALT-A150V200", "corto": "150L"}, {"slug": "ALT-A235V200", "corto": "235L"}, {"slug": "ALT-A302V200", "corto": "302L"}, {"slug": "ALT-A500V200", "corto": "500L"}, {"slug": "ALT-A1KV200", "corto": "1KL"}, {"slug": "SKY-H10KV015", "corto": "H10K"}, {"slug": "SKY-H25KV015", "corto": "H25K"}], ACTUAL = 'ALT-A235V200';
+    const TANQUES = [{"slug": "ALT-A150V200", "corto": "150L"}, {"slug": "ALT-A235V200", "corto": "235L"}, {"slug": "ALT-A302V200", "corto": "302L"}, {"slug": "ALT-A500V200", "corto": "500L"}, {"slug": "ALT-A1KV200", "corto": "1KL"}, {"slug": "ALT-A1K5V200", "corto": "1.5K"}, {"slug": "ALT-A2KV200", "corto": "2K"}, {"slug": "ALT-A3KV200", "corto": "3K"}, {"slug": "ALT-A4KV200", "corto": "4K"}, {"slug": "ALT-A5KV200", "corto": "5K"}, {"slug": "ALT-A6KV200", "corto": "6K"}, {"slug": "ALT-A10KV200", "corto": "10K"}, {"slug": "ALT-A20KV180", "corto": "20K"}, {"slug": "SKY-H10KV015", "corto": "H10K"}, {"slug": "SKY-H25KV015", "corto": "H25K"}], ACTUAL = 'ALT-A235V200';
     const i = TANQUES.findIndex(t => t.slug === ACTUAL), n = TANQUES.length;
     const prev = document.getElementById('nav-prev'), next = document.getElementById('nav-next');
     if (n < 2 || i < 0){ prev.style.visibility = 'hidden'; next.style.visibility = 'hidden'; }
