@@ -1,7 +1,6 @@
-Estructura para GitHub Pages
-  index.html                           lista de visores
-  .nojekyll                            evita que GitHub procese los archivos
-  SKY-H25KV015/index.html              visor (con AR, marcadores numerados y cotas)
-  SKY-H25KV015/SKY-H25KV015_R2.glb     modelo 3D (3.1 MB)
-
-Para agregar otro tanque: crear otra carpeta con su index.html y su .glb, y una linea mas en el index.html de la raiz.
+Carpeta lista para subir a GitHub Pages (todo el contenido, incluida la carpeta de cada tanque).
+  index.html                         lista de visores
+  .nojekyll
+  SKY-H25KV015/index.html + .glb     tanque 25,000 L
+  SKY-H10KV015/index.html + .glb     tanque 11,000 L
+Se genera con ../generar_visores.py (plantilla unica; cada tanque es un bloque de datos).
