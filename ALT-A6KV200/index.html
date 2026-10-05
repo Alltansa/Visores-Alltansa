@@ -190,18 +190,18 @@
   <button slot="hotspot-n7" class="hotspot" data-position="0 -2.231 0" data-normal="0 -1 0"><span class="hnum">10</span><span class="hotspot-label">10 — Medio cople 1 1/4" NPT, inferior</span></button>
   <button slot="hotspot-n8" class="hotspot" data-position="0 0.203 0.69" data-normal="0 0 1"><span class="hnum">9</span><span class="hotspot-label">9 — Medio cople 3/4" NPT, lateral</span></button>
   <button slot="hotspot-n9" class="hotspot" data-position="0 -0.61 0.69" data-normal="0 0 1"><span class="hnum">9</span><span class="hotspot-label">9 — Medio cople 3/4" NPT, lateral</span></button>
-  <button slot="hotspot-n10" class="hotspot" data-position="0.435 2.143 0" data-normal="0 1 0"><span class="hnum">6</span><span class="hotspot-label">6 — Solapa para oreja (2 piezas)</span></button>
-  <button slot="hotspot-n11" class="hotspot" data-position="-0.437 2.201 0" data-normal="0 1 0"><span class="hnum">7</span><span class="hotspot-label">7 — Oreja de izaje (2 piezas)</span></button>
-  <button slot="hotspot-n12" class="hotspot" data-position="0.368 -2.257 0.368" data-normal="0.7 0 0.7"><span class="hnum">4</span><span class="hotspot-label">4 — Pata 9"x9" (4 piezas)</span></button>
+  <button slot="hotspot-n10" class="hotspot" data-position="0.435 2.142 0" data-normal="0 1 0"><span class="hnum">6</span><span class="hotspot-label">6 — Solapa para oreja (2 piezas)</span></button>
+  <button slot="hotspot-n11" class="hotspot" data-position="-0.437 2.2 0" data-normal="0 1 0"><span class="hnum">7</span><span class="hotspot-label">7 — Oreja de izaje (2 piezas)</span></button>
+  <button slot="hotspot-n12" class="hotspot" data-position="0.368 -2.256 0.368" data-normal="0.7 0 0.7"><span class="hnum">4</span><span class="hotspot-label">4 — Pata 9"x9" (4 piezas)</span></button>
   <button slot="hotspot-n13" class="hotspot" data-position="0.368 -2.492 0.368" data-normal="0 -1 0"><span class="hnum">5</span><span class="hotspot-label">5 — Placa base 14"x14" (4 piezas)</span></button>
   <button slot="hotspot-n14" class="hotspot" data-position="-0.382 -1.727 -0.568" data-normal="-0.56 0 -0.83"><span class="hnum">8</span><span class="hotspot-label">8 — Placa de datos</span></button>
   <button slot="hotspot-c0" class="cota-pt" data-position="0 0 0" data-normal="0 1 0"></button>
   <button slot="hotspot-cx" class="cota-pt" data-position="0.5 0 0" data-normal="0 1 0"></button>
   <button slot="hotspot-cz" class="cota-pt" data-position="0 0 0.5" data-normal="0 1 0"></button>
-  <button slot="hotspot-ca1" class="cota-pt" data-position="1.0358 -2.4972 0" data-normal="0 1 0"></button>
-  <button slot="hotspot-ca2" class="cota-pt" data-position="1.0358 2.2973 0" data-normal="0 1 0"></button>
-  <button slot="hotspot-cb1" class="cota-pt" data-position="-0.6858 -2.6172 0" data-normal="0 1 0"></button>
-  <button slot="hotspot-cb2" class="cota-pt" data-position="0.6858 -2.6172 0" data-normal="0 1 0"></button>
+  <button slot="hotspot-ca1" class="cota-pt" data-position="1.0358 -2.4967 0" data-normal="0 1 0"></button>
+  <button slot="hotspot-ca2" class="cota-pt" data-position="1.0358 2.2962 0" data-normal="0 1 0"></button>
+  <button slot="hotspot-cb1" class="cota-pt" data-position="-0.6858 -2.6167000000000002 0" data-normal="0 1 0"></button>
+  <button slot="hotspot-cb2" class="cota-pt" data-position="0.6858 -2.6167000000000002 0" data-normal="0 1 0"></button>
   <button slot="hotspot-cc1" class="cota-pt" data-position="-1.0358 -1.8288 0" data-normal="0 1 0"></button>
   <button slot="hotspot-cc2" class="cota-pt" data-position="-1.0358 1.8288 0" data-normal="0 1 0"></button>
   <button slot="ar-button" id="ar-button">&#9654; Ver en tu espacio (AR)</button>
@@ -223,7 +223,7 @@
   const TEXTO_NARRACION =
     "Este es el modelo A, ele, te, guión, A, 6, ka, uve, 200 de Alltansa, un tanque para compresor vertical con capacidad de " +
     "6,000 litros y presión de diseño de 200 PSI. Sus dimensiones son: diámetro exterior de " +
-    "54 pulgadas, longitud de cuerpo de 144 pulgadas en dos cursos de 72, y altura total de 188.75 pulgadas, con " +
+    "54 pulgadas, longitud de cuerpo de 144 pulgadas en dos cursos de 72, y altura total de 188 y tres cuartos de pulgada, con " +
     "tapas semielípticas 2 a 1, sobre 4 patas de 9 por 9 pulgadas con placa base. Cuenta con una entrada de hombre de 12 por 16, cuatro bridas de 4 pulgadas con su tubo, dos medios coples de una y un cuarto, dos de tres cuartos y dos orejas de izaje.";
 
   const btn = document.getElementById('btn-narracion');
@@ -344,11 +344,11 @@
       <tr><td>Tipo de tapas</td><td class="num">Semielíptica 2:1</td></tr>
       <tr><td>Diámetro exterior (Do)</td><td class="num">54"</td></tr>
       <tr><td>Longitud de cuerpo</td><td class="num">144" (2 cursos de 72")</td></tr>
-      <tr><td>Altura total</td><td class="num">188.75" (479.4 cm)</td></tr>
+      <tr><td>Altura total</td><td class="num">188 3/4" (479.4 cm)</td></tr>
       <tr><td>Base / soporte</td><td class="num">4 patas 9"x9" Cal. 5/16, placa base 14"x14" Cal. 5/16</td></tr>
       <tr><td>Pintura exterior</td><td class="num">Poliuretano</td></tr>
       <tr><td>Radiografiado</td><td class="num">No requerido</td></tr>
-      <tr><td>Peso teórico</td><td class="num">1,485.37 kg</td></tr>
+      <tr><td>Peso teórico</td><td class="num">1,485.47 kg</td></tr>
     </table>
   </div>
   <div class="panel" id="sec-piezas">
@@ -454,12 +454,12 @@
   const bCotasOn = document.getElementById('btn-cotas-on');
   const bCotasOff = document.getElementById('btn-cotas-off');
   const COTAS = [
-    { a: 'ca1', b: 'ca2', txt: '188.75" (479.4 cm)' },
+    { a: 'ca1', b: 'ca2', txt: '188 3/4" (479.4 cm)' },
     { a: 'cb1', b: 'cb2', txt: '54" (137.2 cm)' },
     { a: 'cc1', b: 'cc2', txt: '144" (365.8 cm)' }
   ];
   let cotasOn = false, cotasRaf = 0, thetaPrev = null;
-  const R_TANQUE = 0.6858, Y_MIN = -2.4972, Y_MAX = 2.2973, Y_CUERPO = 1.8288, Y_CC = 0, OFS = 0.35, Y_PISO = Y_MIN - 0.12;
+  const R_TANQUE = 0.6858, Y_MIN = -2.4967, Y_MAX = 2.2962, Y_CUERPO = 1.8288, Y_CC = 0, OFS = 0.35, Y_PISO = Y_MIN - 0.12;
   // las cotas siguen los bordes visibles: el vector 'derecha' de la camara cambia con el giro
   function ubicarCotas(){
     // vector 'derecha' de la camara en el mundo, a partir de como se proyectan 3 puntos de referencia
@@ -546,7 +546,7 @@
 </nav>
 <script>
   (function(){
-    const TANQUES = [{"slug": "ALT-A150V200", "corto": "150L"}, {"slug": "ALT-A235V200", "corto": "235L"}, {"slug": "ALT-A302V200", "corto": "302L"}, {"slug": "ALT-A500V200", "corto": "500L"}, {"slug": "ALT-A1KV200", "corto": "1KL"}, {"slug": "ALT-A1K5V200", "corto": "1.5K"}, {"slug": "ALT-A2KV200", "corto": "2K"}, {"slug": "ALT-A3KV200", "corto": "3K"}, {"slug": "ALT-A4KV200", "corto": "4K"}, {"slug": "ALT-A5KV200", "corto": "5K"}, {"slug": "ALT-A6KV200", "corto": "6K"}, {"slug": "ALT-A10KV200", "corto": "10K"}, {"slug": "ALT-A20KV180", "corto": "20K"}, {"slug": "SKY-H10KV015", "corto": "H10K"}, {"slug": "SKY-H25KV015", "corto": "H25K"}], ACTUAL = 'ALT-A6KV200';
+    const TANQUES = [{"slug": "ALT-A150V200", "corto": "150L"}, {"slug": "ALT-A235V200", "corto": "235L"}, {"slug": "ALT-A302V200", "corto": "302L"}, {"slug": "ALT-A500V200", "corto": "500L"}, {"slug": "ALT-A1KV200", "corto": "1KL"}, {"slug": "ALT-A1K5V200", "corto": "1.5K"}, {"slug": "ALT-A2KV200", "corto": "2K"}, {"slug": "ALT-A3KV200", "corto": "3K"}, {"slug": "ALT-A4KV200", "corto": "4K"}, {"slug": "ALT-A5KV200", "corto": "5K"}, {"slug": "ALT-A6KV200", "corto": "6K"}, {"slug": "ALT-A8KV200", "corto": "8K"}, {"slug": "ALT-A10KV200", "corto": "10K"}, {"slug": "ALT-A20KV180", "corto": "20K"}, {"slug": "SKY-H10KV015", "corto": "H10K"}, {"slug": "SKY-H25KV015", "corto": "H25K"}], ACTUAL = 'ALT-A6KV200';
     const i = TANQUES.findIndex(t => t.slug === ACTUAL), n = TANQUES.length;
     const prev = document.getElementById('nav-prev'), next = document.getElementById('nav-next');
     if (n < 2 || i < 0){ prev.style.visibility = 'hidden'; next.style.visibility = 'hidden'; }
