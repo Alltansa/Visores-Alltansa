@@ -546,7 +546,7 @@
 </nav>
 <script>
   (function(){
-    const TANQUES = [{"slug": "ALT-A150V200", "corto": "150L"}, {"slug": "ALT-A235V200", "corto": "235L"}, {"slug": "ALT-A302V200", "corto": "302L"}, {"slug": "ALT-A500V200", "corto": "500L"}, {"slug": "ALT-A1KV200", "corto": "1KL"}, {"slug": "ALT-A1K5V200", "corto": "1.5K"}, {"slug": "ALT-A2KV200", "corto": "2K"}, {"slug": "ALT-A3KV200", "corto": "3K"}, {"slug": "ALT-A4KV200", "corto": "4K"}, {"slug": "ALT-A4KV200-V2", "corto": "4K V2"}, {"slug": "ALT-A5KV200", "corto": "5K"}, {"slug": "ALT-A6KV200", "corto": "6K"}, {"slug": "ALT-A8KV200", "corto": "8K"}, {"slug": "ALT-A10KV200", "corto": "10K"}, {"slug": "ALT-A15KV200", "corto": "15K"}, {"slug": "ALT-A20KV180", "corto": "20K"}, {"slug": "GOM-H1KV019", "corto": "GOM"}, {"slug": "ICE-A1300V137", "corto": "ICE"}, {"slug": "SKY-H10KV015", "corto": "H10K"}, {"slug": "SKY-H25KV015", "corto": "H25K"}, {"slug": "SKY-N2KV500", "corto": "N2K"}, {"slug": "BSH-A220GV200", "corto": "BSH"}, {"slug": "APE-A1K1V200", "corto": "APE"}, {"slug": "BSH-A770H000", "corto": "BSH2"}, {"slug": "GCTD63", "corto": "GCT"}, {"slug": "ALT-A500V650", "corto": "500V650"}], ACTUAL = 'SKY-N2KV500';
+    const TANQUES = [{"slug": "ALT-A150V200", "corto": "150L"}, {"slug": "ALT-A235V200", "corto": "235L"}, {"slug": "ALT-A302V200", "corto": "302L"}, {"slug": "ALT-A500V200", "corto": "500L"}, {"slug": "ALT-A1KV200", "corto": "1KL"}, {"slug": "ALT-A1K5V200", "corto": "1.5K"}, {"slug": "ALT-A2KV200", "corto": "2K"}, {"slug": "ALT-A3KV200", "corto": "3K"}, {"slug": "ALT-A4KV200", "corto": "4K"}, {"slug": "ALT-A4KV200-V2", "corto": "4K V2"}, {"slug": "ALT-A5KV200", "corto": "5K"}, {"slug": "ALT-A6KV200", "corto": "6K"}, {"slug": "ALT-A7K5V200", "corto": "7.5K"}, {"slug": "ALT-A8KV200", "corto": "8K"}, {"slug": "ALT-A10KV200", "corto": "10K"}, {"slug": "ALT-A15KV200", "corto": "15K"}, {"slug": "ALT-A20KV180", "corto": "20K"}, {"slug": "ALT-A500V650", "corto": "500V650"}, {"slug": "GOM-H1KV019", "corto": "GOM"}, {"slug": "ICE-A1300V137", "corto": "ICE"}, {"slug": "SKY-H10KV015", "corto": "H10K"}, {"slug": "SKY-H25KV015", "corto": "H25K"}, {"slug": "SKY-N2KV500", "corto": "N2K"}, {"slug": "BSH-A220GV200", "corto": "BSH"}, {"slug": "APE-A1K1V200", "corto": "APE"}, {"slug": "BSH-A770H000", "corto": "BSH2"}, {"slug": "GCTD63", "corto": "GCT"}, {"slug": "MIL150V", "corto": "150V"}, {"slug": "MIL235G", "corto": "235G"}, {"slug": "MIL302HPC", "corto": "302H"}, {"slug": "MIL302V", "corto": "302V"}, {"slug": "MIL500H", "corto": "500H"}, {"slug": "MIL500HPC", "corto": "500HPC"}, {"slug": "MIL500HPC-16b", "corto": "500-16b"}, {"slug": "MIL500-HPC-CB", "corto": "500CB"}, {"slug": "MIL1000HPC", "corto": "1000H"}], ACTUAL = 'SKY-N2KV500';
     const i = TANQUES.findIndex(t => t.slug === ACTUAL), n = TANQUES.length;
     const prev = document.getElementById('nav-prev'), next = document.getElementById('nav-next');
     if (n < 2 || i < 0){ prev.style.visibility = 'hidden'; next.style.visibility = 'hidden'; }
@@ -604,7 +604,7 @@
     ['Conexiones', /cople|brida|boquilla|conexi|tortuga|man[oó]metro|term[oó]metro|v[aá]lvula|mirilla|visor|tubo|codo|empaque|cuello|entrada|tap[oó]n|niple|nivel/i],
   ];
   const grupoDe = d => { for (const [g, re] of GRUPOS) if (re.test(d)) return g; return 'Otros'; };
-  const norm = s => s.toLowerCase().replace(/-\d+$/, '').replace(/(\d)i(\d)/g, '$1$2').replace(/[^a-z0-9]/g, '');
+  const norm = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/-\d+$/, '').replace(/(\d)i(\d)/g, '$1$2').replace(/[^a-z0-9]/g, '');
   filas.forEach(f => { f.grupo = grupoDe(f.desc); f.n = norm(f.desc); });
   const porNum = Object.fromEntries(filas.map(f => [f.num, f]));
 
@@ -628,7 +628,7 @@
         const m = n.match(/[ _]P0*(\d+)(?:-\d+)?$/);
         if (m && porNum[m[1]]) { g = porNum[m[1]].grupo; break; }
         const nn = norm(n);
-        const f = nn.length > 6 && filas.find(x => x.n === nn || x.n.startsWith(nn) || nn.startsWith(x.n));
+        const f = nn.length > 6 && filas.find(x => x.n === nn || (nn.length > 7 && x.n.startsWith(nn)) || nn.startsWith(x.n));
         if (f) { g = f.grupo; break; }
       }
       const k = o.geometry.attributes.position.array;
